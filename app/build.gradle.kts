@@ -58,7 +58,9 @@ android {
 dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
-
+    // MAPS
+    implementation("com.google.maps.android:maps-compose:2.15.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
 
     // HILT
     implementation("com.google.dagger:hilt-android:2.44")
