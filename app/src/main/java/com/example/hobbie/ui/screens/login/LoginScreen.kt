@@ -31,11 +31,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.hobbie.R
-import com.example.hobbie.ui.theme.HobbieTheme
+import com.example.hobbie.ui.Destinations
 
 @Composable
 fun ShouldRegisterScreen() {
@@ -211,7 +211,9 @@ fun ShouldRegisterScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController
+) {
 
     var textFieldValue by remember {
         mutableStateOf("")
@@ -313,7 +315,9 @@ fun LoginScreen() {
 
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                navController.navigate("root_graph/home_graph")
+            },
             modifier = Modifier
                 .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
@@ -325,11 +329,3 @@ fun LoginScreen() {
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    HobbieTheme {
-        LoginScreen()
-    }
-}
