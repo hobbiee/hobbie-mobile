@@ -1,61 +1,61 @@
-package com.example.hobbie.ui.screens.home.components
+package com.example.hobbie.ui.shared.BottomSheetFilter
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.hobbie.ui.screens.home.HomeViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheet() {
-    val homeViewModel: HomeViewModel = viewModel()
+fun BottomSheet(
+    isBottomSheetOpen: Boolean,
+    onChangeBottomSheetState: () -> Unit,
+) {
+    val bottomSheetViewModel: BottomSheetViewModel = hiltViewModel()
 
-    val isBottomSheetOpen = homeViewModel.isBottomSheetOpen.value
+    val interessesList = bottomSheetViewModel.interessesList
+
+    val interessesSelecionados = bottomSheetViewModel.interessesSelecionados
+
+    val distance = bottomSheetViewModel.distance.value
 
     val sheetState = rememberModalBottomSheetState()
 
     if(isBottomSheetOpen) {
         ModalBottomSheet(
             onDismissRequest = {
-                homeViewModel.onChangeBottomSheetState()
+                onChangeBottomSheetState()
             },
             sheetState = sheetState,
             containerColor = Color.White,
@@ -67,8 +67,7 @@ fun BottomSheet() {
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 32.dp),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -108,6 +107,8 @@ fun BottomSheet() {
                     }
                 }
 
+                Spacer(modifier = Modifier.height(24.dp))
+
                 Text(
                     text = "Interesses",
                     style = TextStyle(
@@ -119,16 +120,6 @@ fun BottomSheet() {
                     modifier = Modifier
                         .padding(bottom = 12.dp)
                 )
-
-                val interessesList: List<String> = listOf(
-                    "Corrida",
-                    "Futebol",
-                    "Natacao",
-                    "Basquete",
-                    "Outros"
-                )
-
-                var interessesSelecionados = remember { mutableStateListOf<String>() }
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -142,9 +133,9 @@ fun BottomSheet() {
                             selected = selected,
                             onClick = {
                                 if (selected) {
-                                    interessesSelecionados.remove(it)
+                                    bottomSheetViewModel.onRemoveInteresse(it)
                                 } else {
-                                    interessesSelecionados.add(it)
+                                    bottomSheetViewModel.onAddInteresse(it)
                                 }
                             },
                             label = {
@@ -169,52 +160,7 @@ fun BottomSheet() {
                     }
                 }
 
-                val context = LocalContext.current
-                val coffeeDrinks = arrayOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")
-                var expanded by remember { mutableStateOf(false) }
-                var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
-
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-                    ExposedDropdownMenuBox(
-                        expanded = expanded,
-                        onExpandedChange = {
-                            expanded = !expanded
-                        }
-                    ) {
-                        OutlinedTextField(
-                            value = selectedText,
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                            modifier = Modifier
-                                .menuAnchor()
-                                .fillMaxWidth(),
-                            label = { Text("Localidade") },
-                            shape = RoundedCornerShape(12.dp),
-                        )
-
-                        ExposedDropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            coffeeDrinks.forEach { item ->
-                                DropdownMenuItem(
-                                    text = { Text(text = item) },
-                                    onClick = {
-                                        selectedText = item
-                                        expanded = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                var distancia by remember { mutableFloatStateOf(40f) }
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Column(
 
@@ -236,7 +182,7 @@ fun BottomSheet() {
                         )
 
                         Text(
-                            text = "$distancia km",
+                            text = "$distance km",
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 lineHeight = 21.sp,
@@ -248,17 +194,29 @@ fun BottomSheet() {
                     }
 
                     Slider(
-                        value = distancia,
-                        onValueChange = { distancia = it },
+                        value = distance,
+                        onValueChange = { bottomSheetViewModel.onDistanceChange(it) },
                         colors = SliderDefaults.colors(
-
+                            thumbColor = Color(0xFFFF7930),
+                            activeTrackColor = Color(0xFFFF7930),
+                            inactiveTrackColor = Color(0xFFDDDBDF),
                         ),
-                        steps = 1,
-                        valueRange = 0f..100f
+                        steps = 9,
+                        valueRange = 0f..100f,
+                        thumb = {
+                            Box(
+                                modifier = Modifier
+                                    .border(width = 4.dp, color = Color(0xFFFFFFFF))
+                                    .padding(4.dp)
+                                    .width(32.dp)
+                                    .height(32.dp)
+                                    .background(color = Color(0xFFFF7930), shape = CircleShape)
+                            ) {}
+                        },
                     )
                 }
 
-
+                Spacer(modifier = Modifier.height(24.dp))
 
                 ElevatedButton(
                     onClick = { /*TODO*/ },
@@ -274,5 +232,4 @@ fun BottomSheet() {
             }
         }
     }
-
 }

@@ -1,61 +1,55 @@
 package com.example.hobbie.ui.screens.home
 
 import android.util.Log
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.alexstyl.swipeablecard.Direction
+import com.alexstyl.swipeablecard.SwipeableCardState
+import com.example.hobbie.models.EventItem
+import com.example.hobbie.repository.EventRepository
+import com.example.hobbie.repository.FilterRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel: ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val eventRepository: EventRepository,
+    private val filterRepository: FilterRepository
+) : ViewModel() {
+    val events: StateFlow<List<EventItem>> get() = eventRepository.events
 
-    // MUTABLE STATE
-
-    private var _isBottomSheetOpen = mutableStateOf(false)
-
-    val isBottomSheetOpen = _isBottomSheetOpen
+    val isBottomSheetOpen = filterRepository.isBottomSheetOpen
 
     fun onChangeBottomSheetState() {
-        _isBottomSheetOpen.value = _isBottomSheetOpen.value.not()
+        filterRepository.onChangeBottomSheetState()
     }
 
-//    fun onBottomSheetOpen() {
-//        Log.d("HomeViewModel", "onBottomSheetOpen: ")
-//        _isBottomSheetOpen.value = true
-//    }
-//
-//    fun onBottomSheetClose(): () -> Unit = {
-//        _isBottomSheetOpen.value = false
-//    }
+    fun onCardSwipe(direction: Direction, event: EventItem, navController: NavHostController) {
+        Log.d("HomeViewModel", "onCardSwipe: ${direction.name}")
+        when (direction.name) {
+            "Left" -> {
+                navController.navigate("event/${event.id}")
+                Log.d("HomeViewModel", "onCardSwipe: LEFT")
+            }
+            "Right" -> {
+                Log.d("HomeViewModel", "onCardSwipe: RIGHT")
+            }
+            else -> {
+                Log.d("HomeViewModel", "onCardSwipe: NONE")}
+        }
+    }
 
-
-
-
-
-//     MUTABLE LIVE DATA
-
-//    private val _isBottomSheetOpen = MutableLiveData(false)
-//
-//    val isBottomSheetOpen: LiveData<Boolean> get() = _isBottomSheetOpen
-//
-//    fun onBottomSheetOpen() {
-//        Log.d("HomeViewModel", "onBottomSheetOpen: ")
-//        _isBottomSheetOpen.value = _isBottomSheetOpen.value?.not()
-//    }
-
-
-
-
-
-//    private val _isBottomSheetOpen = MutableStateFlow(true)
-//
-//    val isBottomSheetOpen: StateFlow<Boolean> get() = _isBottomSheetOpen
-//
-//    suspend fun onBottomSheetOpen() {
-//        Log.d("HomeViewModel", "onBottomSheetOpen: ")
-//        _isBottomSheetOpen.emit(_isBottomSheetOpen.value.not())
-//    }
-
-
+    init {
+        viewModelScope.launch {
+            eventRepository.getEvents()
+        }
+    }
 }

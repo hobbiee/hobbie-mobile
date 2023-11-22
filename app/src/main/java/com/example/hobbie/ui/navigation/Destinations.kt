@@ -1,4 +1,4 @@
-package com.example.hobbie.ui
+package com.example.hobbie.ui.navigation
 
 sealed class Destinations(
     val route: String,
@@ -11,9 +11,3 @@ sealed class Destinations(
     object HOME : Destinations("home")
 
 }
-
-
-//object Routes {
-//    const val LOGIN = "login"
-//    const val HOME = "home"
-//}

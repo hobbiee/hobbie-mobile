@@ -58,6 +58,12 @@ android {
 dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
+    // LOCATION
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // TINDER LIKE CARD
+    implementation("com.alexstyl.swipeablecard:swipeablecard:0.1.0")
+
     // ASYNC IMAGE
     implementation("io.coil-kt:coil-compose:2.5.0")
 

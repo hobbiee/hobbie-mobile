@@ -1,6 +1,6 @@
 package com.example.hobbie.di
 
-import com.example.hobbie.api.QuotesAPI
+import com.example.hobbie.api.HobbieAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,15 +17,15 @@ class NetworkModule {
     @Provides
     fun providesRetrofit(): Retrofit{
         return Retrofit.Builder()
-            .baseUrl("https://zenquotes.io")
+            .baseUrl("https://hobbie-labs-301323ee4a69.herokuapp.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
     @Singleton
     @Provides
-    fun providesQuotesAPI(retrofit: Retrofit): QuotesAPI {
-        return retrofit.create(QuotesAPI::class.java)
+    fun providesHobbieAPI(retrofit: Retrofit): HobbieAPI {
+        return retrofit.create(HobbieAPI::class.java)
     }
 
 }
