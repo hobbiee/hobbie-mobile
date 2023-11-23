@@ -1,4 +1,4 @@
-package com.example.hobbie.ui.screens.home.components
+package com.example.hobbie.ui.shared
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,10 +17,10 @@ import com.example.hobbie.models.EventItem
 fun ImageAndBlur(
     thumbnail: String?,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxHeight(0.6f)
-    ) {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxHeight(0.6f)
+//    ) {
         // IMAGE FROM BACKGROUND TO BLUR EFFECT
         AsyncImage(
             model = thumbnail,
@@ -50,5 +50,5 @@ fun ImageAndBlur(
                     }
                 },
         )
-    }
+//    }
 }

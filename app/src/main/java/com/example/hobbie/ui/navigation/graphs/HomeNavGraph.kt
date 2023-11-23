@@ -1,6 +1,7 @@
 package com.example.hobbie.ui.navigation.graphs
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,7 +13,8 @@ import com.example.hobbie.ui.screens.maps.MapsScreen
 
 @Composable
 fun HomeNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    hideBottomBar: MutableState<Boolean>
 ) {
     NavHost(
         navController = navController,
@@ -22,7 +24,9 @@ fun HomeNavGraph(
         composable(
             route = "map"
         ) {
-            MapsScreen()
+            MapsScreen(
+                hideBottomBar = hideBottomBar
+            )
         }
 
         composable(

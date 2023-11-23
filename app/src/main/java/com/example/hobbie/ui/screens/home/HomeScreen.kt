@@ -3,8 +3,10 @@ package com.example.hobbie.ui.screens.home
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,7 +39,7 @@ import com.alexstyl.swipeablecard.ExperimentalSwipeableCardApi
 import com.alexstyl.swipeablecard.rememberSwipeableCardState
 import com.alexstyl.swipeablecard.swipableCard
 import com.example.hobbie.ui.shared.BottomSheetFilter.BottomSheet
-import com.example.hobbie.ui.screens.home.components.ImageAndBlur
+import com.example.hobbie.ui.shared.ImageAndBlur
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSwipeableCardApi::class)
@@ -55,7 +57,7 @@ fun HomeScreen(
 
     Column(
         modifier = Modifier
-            .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 108.dp),
+            .padding(top = 22.dp, start = 22.dp, end = 22.dp, bottom = 108.dp),
     ) {
         Row(
             modifier = Modifier
@@ -138,9 +140,14 @@ fun HomeScreen(
                                 },
                             ),
                     ) {
-                        ImageAndBlur(
-                            thumbnail = event.thumbnail
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight(0.6f)
+                        ) {
+                            ImageAndBlur(
+                                thumbnail = event.thumbnail
+                            )
+                        }
 
                         Column(
                             modifier = Modifier
@@ -243,7 +250,6 @@ fun HomeScreen(
                 }
             }
         }
-
     }
 
     BottomSheet(

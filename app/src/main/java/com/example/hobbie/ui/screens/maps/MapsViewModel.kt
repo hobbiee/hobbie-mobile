@@ -39,6 +39,18 @@ class MapsViewModel @Inject constructor(
 
     val userLocation: StateFlow<LatLng?> get() = _userLocation
 
+    private val _infoWindowEvent = MutableStateFlow<EventItem?>(null)
+
+    val infoWindowEvent: StateFlow<EventItem?> get() = _infoWindowEvent
+
+    suspend fun onInfoWindowOpen(event: EventItem) {
+        _infoWindowEvent.emit(event)
+    }
+
+    suspend fun onInfoWindowClose() {
+        _infoWindowEvent.emit(null)
+    }
+
     fun onChangeBottomSheetState() {
         filterRepository.onChangeBottomSheetState()
     }
@@ -46,6 +58,10 @@ class MapsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             Log.d("location", "init")
+
+            this.async {
+                eventRepository.getEvents()
+            }
 
             this.async {
                 val call = locationClient.getCurrentLocation(

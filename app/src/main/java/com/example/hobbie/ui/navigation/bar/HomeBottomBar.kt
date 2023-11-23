@@ -11,6 +11,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun HomeBottomBar(
-    navController: NavHostController
+    navController: NavHostController,
+    hideBottomBar: MutableState<Boolean>
 ) {
     val screens = listOf(
         HomeBottomBarScreens.Map,
@@ -39,6 +42,9 @@ fun HomeBottomBar(
     val route = navBackStackEntry?.destination?.route ?: ""
 
     bottomBarState = when {
+        hideBottomBar.value -> {
+            false
+        }
         route.contains("event") -> {
             false
         }
@@ -55,7 +61,8 @@ fun HomeBottomBar(
         NavigationBar(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 16.dp)
-                .clip(RoundedCornerShape(percent = 100)),
+                .clip(RoundedCornerShape(percent = 100))
+                .zIndex(1f),
             containerColor = Color.White,
         ) {
             screens.forEach { screen ->

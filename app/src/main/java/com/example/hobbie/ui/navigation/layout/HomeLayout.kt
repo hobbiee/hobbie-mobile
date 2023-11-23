@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -18,10 +20,13 @@ import com.example.hobbie.ui.navigation.graphs.HomeNavGraph
 fun HomeLayout(
     navController: NavHostController = rememberNavController(),
 ) {
+    val hideBottomBar = remember { mutableStateOf(false) }
+
     Scaffold(
         bottomBar = {
             HomeBottomBar(
-                navController = navController
+                navController = navController,
+                hideBottomBar = hideBottomBar
             )
         },
         content = { padding ->
@@ -32,7 +37,8 @@ fun HomeLayout(
                     .background(color = Color(0xFFF1E8DA)),
             ) {
                 HomeNavGraph(
-                    navController = navController
+                    navController = navController,
+                    hideBottomBar = hideBottomBar
                 )
             }
         }
