@@ -1,9 +1,11 @@
 package com.example.hobbie.ui.screens.maps
 
+import android.widget.Spinner
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +15,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.sharp.Menu
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -35,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.hobbie.ui.shared.BottomSheetFilter.BottomSheet
 import com.example.hobbie.ui.shared.ImageAndBlur
 import com.google.android.gms.maps.model.CameraPosition
@@ -47,18 +53,22 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MapsScreen(
-    hideBottomBar: MutableState<Boolean>
+    hideBottomBar: MutableState<Boolean>,
+    navController: NavController
 ) {
     val mapsViewModel: MapsViewModel = hiltViewModel()
-
-    val userLocation = mapsViewModel.userLocation.collectAsState().value
 
     val events = mapsViewModel.events.collectAsState().value
 
     val infoWindowEvent = mapsViewModel.infoWindowEvent.collectAsState().value
 
-    Box(
+    val cameraPositionState = mapsViewModel.cameraPositionState.collectAsState().value
 
+    val isMapLoaded = mapsViewModel.isMapLoaded.collectAsState().value
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         FilledIconButton(
             onClick = {
@@ -81,44 +91,51 @@ fun MapsScreen(
             )
         }
 
-        if (userLocation != null) {
-            val cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(userLocation, 13f)
-            }
+        Text(
+            text = isMapLoaded.toString(),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .zIndex(100f),
+            color = Color.Red
+        )
 
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-            ) {
-                events.forEach {
-                    Marker(
-                        state = MarkerState(position = LatLng(it.latitude, it.longitude)),
-                        title = it.name,
-                        snippet = it.description,
-                        tag = it.id,
-                        onClick = {
-                            val eventClicked = events.first { event -> event.id == it.tag }
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            onMapLoaded = {
+                mapsViewModel.viewModelScope.launch {
+                    mapsViewModel.onMapLoaded()
+                }
+            },
+        ) {
+            events.forEach {
+                Marker(
+                    state = MarkerState(position = LatLng(it.latitude, it.longitude)),
+                    title = it.name,
+                    snippet = it.description,
+                    tag = it.id,
+                    onClick = {
+                        val eventClicked = events.first { event -> event.id == it.tag }
 
-                            mapsViewModel.viewModelScope.launch {
-                                if (infoWindowEvent != null) {
-                                    if (infoWindowEvent.id == eventClicked.id) {
-                                        mapsViewModel.onInfoWindowClose()
-                                        hideBottomBar.value = false
-                                    } else {
-                                        mapsViewModel.onInfoWindowClose()
-                                        mapsViewModel.onInfoWindowOpen(eventClicked)
-                                        hideBottomBar.value = true
-                                    }
+                        mapsViewModel.viewModelScope.launch {
+                            if (infoWindowEvent != null) {
+                                if (infoWindowEvent.id == eventClicked.id) {
+                                    mapsViewModel.onInfoWindowClose()
+                                    hideBottomBar.value = false
                                 } else {
+                                    mapsViewModel.onInfoWindowClose()
                                     mapsViewModel.onInfoWindowOpen(eventClicked)
                                     hideBottomBar.value = true
                                 }
+                            } else {
+                                mapsViewModel.onInfoWindowOpen(eventClicked)
+                                hideBottomBar.value = true
                             }
-
-                            return@Marker true
                         }
-                    )
-                }
+
+                        return@Marker true
+                    }
+                )
             }
         }
 
@@ -139,6 +156,11 @@ fun MapsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .clickable {
+                            mapsViewModel.onEventClick(
+                                navController = navController,
+                            )
+                        }
                         .background(color = Color(0xFFF1E8DA))
                         .align(Alignment.BottomCenter),
                 ) {

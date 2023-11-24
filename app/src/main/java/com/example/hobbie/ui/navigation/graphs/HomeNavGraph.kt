@@ -25,7 +25,8 @@ fun HomeNavGraph(
             route = "map"
         ) {
             MapsScreen(
-                hideBottomBar = hideBottomBar
+                hideBottomBar = hideBottomBar,
+                navController = navController
             )
         }
 
