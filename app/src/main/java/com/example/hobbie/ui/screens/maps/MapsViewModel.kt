@@ -20,7 +20,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
 import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
@@ -47,9 +46,13 @@ class MapsViewModel @Inject constructor(
 
     val isMapLoaded: StateFlow<Boolean> get() = _isMapLoaded
 
+    val mapDefaultLocation = LatLng(-24.9465856, -63.0136597)
+
+    val mapDefaultZoom = 13f
+
     private val _cameraPositionState = MutableStateFlow<CameraPositionState>(
         CameraPositionState(
-            position = CameraPosition.fromLatLngZoom(LatLng(-24.9465856, -63.0136597), 0f)
+            position = CameraPosition.fromLatLngZoom(mapDefaultLocation, 0f)
         )
     )
 
@@ -60,7 +63,7 @@ class MapsViewModel @Inject constructor(
 
         _isMapLoaded.emit(true)
 
-        moveCameraPositionToUserLocation()
+        moveCameraPositionToEvents()
     }
 
     suspend fun onInfoWindowOpen(event: EventItem) {
@@ -89,6 +92,30 @@ class MapsViewModel @Inject constructor(
         }
     }
 
+    suspend fun moveCameraPositionToEvents() {
+        val eventsLength = events.value
+
+        val eventsMean = events.value
+            .fold(Pair(0.0, 0.0)) { acc, eventItem ->
+                Pair(
+                    acc.first + eventItem.latitude,
+                    acc.second + eventItem.longitude)
+            }
+
+        val latLngMean = LatLng(
+            eventsMean.first / eventsLength.size,
+            eventsMean.second / eventsLength.size
+        )
+
+        _cameraPositionState.emit(
+            CameraPositionState(
+                position = CameraPosition.fromLatLngZoom(
+                    latLngMean, mapDefaultZoom
+                )
+            )
+        )
+    }
+
     suspend fun onInfoWindowClose() {
         _infoWindowEvent.emit(null)
     }
@@ -101,11 +128,11 @@ class MapsViewModel @Inject constructor(
         viewModelScope.launch {
             Log.d("location", "init")
 
-            this.async {
+//            this.async {
                 eventRepository.getEvents()
-            }
+//            }
 
-            this.async {
+//            this.async {
                 val call = locationClient.getCurrentLocation(
                     Priority.PRIORITY_HIGH_ACCURACY,
                     null
@@ -118,8 +145,8 @@ class MapsViewModel @Inject constructor(
                     _userLocation.tryEmit(LatLng(it.result.latitude, it.result.longitude))
                 }
 
-                moveCameraPositionToUserLocation()
-            }
+                moveCameraPositionToEvents()
+//            }
 
             Log.d("location", "depois")
         }

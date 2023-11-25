@@ -64,8 +64,6 @@ fun MapsScreen(
 
     val cameraPositionState = mapsViewModel.cameraPositionState.collectAsState().value
 
-    val isMapLoaded = mapsViewModel.isMapLoaded.collectAsState().value
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -90,14 +88,6 @@ fun MapsScreen(
                 tint = Color(0xFFFF7930)
             )
         }
-
-        Text(
-            text = isMapLoaded.toString(),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .zIndex(100f),
-            color = Color.Red
-        )
 
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
@@ -168,6 +158,7 @@ fun MapsScreen(
                         onClick = {
                             mapsViewModel.viewModelScope.launch {
                                 mapsViewModel.onInfoWindowClose()
+                                hideBottomBar.value = false
                             }
                         },
                         modifier = Modifier
