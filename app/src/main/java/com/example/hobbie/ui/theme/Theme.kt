@@ -31,7 +31,6 @@ private val LightColorScheme = lightColorScheme(
     background = Primary,
 
 
-
     /* Other default colors to override
 
     surface = Color(0xFFFFFBFE),
@@ -63,8 +62,8 @@ fun HobbieTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = Primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
