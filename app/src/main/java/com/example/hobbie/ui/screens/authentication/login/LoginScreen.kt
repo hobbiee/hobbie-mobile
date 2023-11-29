@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hobbie.R
+import com.example.hobbie.ui.navigation.graphs.Graph
 import com.example.hobbie.ui.theme.Error
 import com.example.hobbie.ui.theme.Primary
 import com.example.hobbie.ui.theme.WarmGray100
@@ -130,7 +131,9 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    loginViewModel.onLoginClick()
+                    loginViewModel.onLoginClick() {
+                        navController.navigate(Graph.HOME)
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()

@@ -1,5 +1,6 @@
 package com.example.hobbie.ui.screens.authentication.login
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -37,7 +38,8 @@ class LoginViewModel @Inject constructor(
         this.password = password
     }
 
-    fun onLoginClick() {
+    fun onLoginClick(onLoginSuccess: () -> Unit) {
+
         if (isValid()) {
             hobbieAPI
                 .doLogin(LoginRequest(email, password))
@@ -47,8 +49,11 @@ class LoginViewModel @Inject constructor(
                         response: Response<LoginResponse>
                     ) {
                         if (response.isSuccessful) {
+                            Log.d("Login Success", "onResponse: ${response.body()}")
                             sessionManager.saveAuthToken(response.body()!!.accessToken)
+                            onLoginSuccess()
                         } else {
+                            Log.d("Login Error", "onResponse: ${response.errorBody()}")
                             errorMessage = "Usuário ou senha inválidos"
                             hasError = true
                         }
