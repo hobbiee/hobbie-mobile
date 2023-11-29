@@ -1,6 +1,8 @@
 package com.example.hobbie.di
 
 import com.example.hobbie.api.HobbieAPI
+import com.example.hobbie.api.session.Constants
+import com.example.hobbie.api.session.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,9 +17,9 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun providesRetrofit(): Retrofit{
+    fun providesRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://hobbie-labs-301323ee4a69.herokuapp.com/")
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
