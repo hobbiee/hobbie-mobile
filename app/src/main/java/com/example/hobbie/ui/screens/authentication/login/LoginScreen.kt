@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hobbie.R
+import com.example.hobbie.ui.theme.Error
 import com.example.hobbie.ui.theme.Primary
 import com.example.hobbie.ui.theme.WarmGray100
 import com.example.hobbie.ui.theme.WarmGray800
@@ -53,7 +54,6 @@ fun LoginScreen(
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val loginViewModel: LoginViewModel = hiltViewModel()
-
 
     Column(
         modifier = Modifier
@@ -99,7 +99,7 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(48.dp)
+            verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -112,6 +112,20 @@ fun LoginScreen(
                 PasswordTextField(passwordState = loginViewModel.password) {
                     loginViewModel.onPasswordChange(it)
                 }
+            }
+
+            if (loginViewModel.hasError) {
+                Text(
+                    text = loginViewModel.errorMessage,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        fontWeight = FontWeight(500),
+                        fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
+                        color = Error
+                    ),
+                    textAlign = TextAlign.Center,
+                )
             }
 
             Button(
