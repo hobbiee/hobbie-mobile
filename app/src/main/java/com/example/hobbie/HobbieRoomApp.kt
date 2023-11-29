@@ -6,11 +6,10 @@ import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
-import coil.util.DebugLogger
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class HobbieRoomApp: Application(), ImageLoaderFactory {
+class HobbieRoomApp : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
     }
@@ -31,7 +30,6 @@ class HobbieRoomApp: Application(), ImageLoaderFactory {
                     .directory(cacheDir)
                     .build()
             }
-//            .logger(DebugLogger())
             .build()
     }
 }
