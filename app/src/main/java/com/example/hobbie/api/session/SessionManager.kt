@@ -23,4 +23,8 @@ class SessionManager @Inject constructor(
     fun clearAuthToken() {
         prefs.edit().remove(Constants.AUTH_TOKEN).apply()
     }
+
+    fun noAuthToken(): Boolean {
+        return fetchAuthToken() == null
+    }
 }
