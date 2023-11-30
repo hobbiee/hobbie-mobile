@@ -15,11 +15,12 @@ class EventRepository @Inject constructor(
     val events: StateFlow<List<EventItem>> get() = _events
 
     suspend fun getEvents() {
-//        val result = hobbieAPI.getPlayerEvents()
-////        if (result.isSuccessful && result.body() != null) {
+        val result = hobbieAPI.getPlayerEvents()
+
+        if (result.isSuccessful && result.body() != null) {
 //        if (false) {
-//            _events.emit(result.body()!!)
-//        } else {
+            _events.emit(result.body()!!)
+        } else {
             _events.emit(
                 listOf(
                     EventItem(
@@ -60,6 +61,6 @@ class EventRepository @Inject constructor(
                     ),
                 )
             )
-//        }
+        }
     }
 }

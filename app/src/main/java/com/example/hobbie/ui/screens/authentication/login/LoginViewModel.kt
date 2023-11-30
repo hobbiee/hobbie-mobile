@@ -39,8 +39,8 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onLoginClick(onLoginSuccess: () -> Unit) {
-
         if (isValid()) {
+            Log.d("Login", "onLoginClick: $email $password")
             hobbieAPI
                 .doLogin(LoginRequest(email, password))
                 .enqueue(object : Callback<LoginResponse> {
@@ -68,6 +68,8 @@ class LoginViewModel @Inject constructor(
 
             return
         }
+
+//        onLoginSuccess()
 
         when {
             email.isEmpty() -> {

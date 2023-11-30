@@ -155,7 +155,8 @@ fun HomeScreen(
                                 .clip(RoundedCornerShape(
                                     bottomStart = 12.dp, bottomEnd = 12.dp
                                 ))
-                                .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
+                                .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                                .fillMaxWidth(),
                         ) {
                             Text(
                                 text = event.name,
@@ -164,7 +165,8 @@ fun HomeScreen(
                                     lineHeight = 32.sp,
                                     fontWeight = FontWeight(700),
                                     color = Color(0xFFFFFFFF),
-                                )
+                                ),
+                                modifier = Modifier.fillMaxWidth()
                             )
                             Text(
                                 text = "${event.description} - ${event.date}",
@@ -173,7 +175,8 @@ fun HomeScreen(
                                     lineHeight = 24.sp,
                                     fontWeight = FontWeight(450),
                                     color = Color(0xFFFFFFFF),
-                                )
+                                ),
+                                modifier = Modifier.fillMaxWidth()
                             )
                         }
 

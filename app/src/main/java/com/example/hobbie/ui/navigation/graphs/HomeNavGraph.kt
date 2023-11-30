@@ -10,6 +10,7 @@ import com.example.hobbie.ui.navigation.layout.EventsLayout
 import com.example.hobbie.ui.screens.event.EventScreen
 import com.example.hobbie.ui.screens.home.HomeScreen
 import com.example.hobbie.ui.screens.maps.MapsScreen
+import com.example.hobbie.ui.screens.profile.ProfileScreen
 
 @Composable
 fun HomeNavGraph(
@@ -50,6 +51,12 @@ fun HomeNavGraph(
             route = Graph.EVENTS
         ) {
             EventsLayout()
+        }
+
+        composable(
+            route = "profile"
+        ) {
+            ProfileScreen(navController)
         }
     }
 }

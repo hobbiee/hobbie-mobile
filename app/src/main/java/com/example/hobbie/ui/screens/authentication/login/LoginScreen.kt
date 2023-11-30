@@ -221,7 +221,8 @@ fun EmailTextField(
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
                 fontWeight = FontWeight(500),
-                fontFamily = MaterialTheme.typography.bodyLarge.fontFamily
+                fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
+                color = Color(0xFF000000)
             ),
             singleLine = true,
             placeholder = { Text("Digite seu email aqui") },
@@ -281,7 +282,8 @@ fun PasswordTextField(
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
                 fontWeight = FontWeight(500),
-                fontFamily = MaterialTheme.typography.bodyLarge.fontFamily
+                fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
+                color = Color(0xFF000000)
             ),
             singleLine = true,
             placeholder = { Text("Digite sua senha aqui") },
@@ -290,7 +292,7 @@ fun PasswordTextField(
                 focusedBorderColor = Color(0xFF000000),
                 unfocusedBorderColor = Color(0xFF000000),
             ),
-            visualTransformation = PasswordVisualTransformation(),
+//            visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         )
 

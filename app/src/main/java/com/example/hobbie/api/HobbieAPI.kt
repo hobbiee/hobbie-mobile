@@ -12,7 +12,7 @@ import retrofit2.http.POST
 
 interface HobbieAPI {
 
-    @GET("/v1/api/events/2")
+    @GET("/v1/api/events/3")
     suspend fun getPlayerEvents(): Response<Event>
 
     @Headers("Content-Type: application/json")
